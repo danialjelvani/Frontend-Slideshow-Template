@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>slide show</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="./output.css" rel="stylesheet">
+    </head>
+
+    <body class="bg-black">
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div id="frame" class="bg-neutral-900 h-113 w-100 mt-[50px] ml-[50%] translate-x-[-50%] rounded-xl">
+            <div id="slide" class="bg-neutral-800 max-h-82 maxw-95 mx-auto rounded-xl top-[10px] fixed">
+                <img id="img1" src="images/1.jpg" class="h-82 shadow-black shadow-md rounded-xl opacity-100 top-[10px] fixed transition-opacity duration-1000" alt="">
+            </div>
+            <div id="thumbnailContainer" class="flex justify-center top-[350px] relative">
+
+            </div>
+            <div class="text-teal-300 flex justify-around relative top-90">
+                <button id="btnPrev" class="bg-teal-950 w-[70px] h-[35px] rounded-lg font-mono text-2xl shadow-md shadow-black cursor-pointer hover:scale-105 hover:bg-neutral-700 hover:text-black transition-transform"><</button>
+                <button id="btnNext" class="bg-teal-950 w-[70px] h-[35px] rounded-lg font-mono text-2xl shadow-md shadow-black cursor-pointer hover:scale-105 hover:bg-neutral-700 hover:text-black transition-transform">></button>
+            </div>
+        </div>
+
+        <script>
+
+            const slides = [
+                '<img id="img1" src="images/1.jpg" class="h-82 rounded-xl opacity-0 top-[10px] fixed transition-opacity duration-1000" alt="">',
+                '<img id="img2" src="images/2.jpg" class="h-82 rounded-xl opacity-0 top-[10px] fixed transition-opacity duration-1000" alt="">',
+                '<img id="img3" src="images/3.jpg" class="h-82 rounded-xl opacity-0 top-[10px] fixed transition-opacity duration-1000" alt="">',
+                '<img id="img4" src="images/4.jpg" class="h-82 rounded-xl opacity-0 top-[10px] fixed transition-opacity duration-1000" alt="">',
+            ]
+            const btnPrev = document.getElementById("btnPrev")
+            const btnNext = document.getElementById("btnNext")
+            const slide = document.getElementById("slide")
+
+            slides.slice(1, slides.length).forEach(img => { // this way the first image is loaded first with html and the rest with script
+                slide.innerHTML += img
+            })
+
+            let counter = 0
+
+            const updateSlide = (newindex) => {
+                document.getElementById(`img${counter + 1}`).classList.add("opacity-0");
+                document.getElementById(`img${newindex + 1}`).classList.remove("opacity-0");
+                counter = newindex;
+            }
+
+            btnNext.addEventListener("click", () => {
+                let newindex = (counter + 1) % slides.length;
+                updateSlide(newindex);
+                restartAutoplay();
+            });
+
+            btnPrev.addEventListener("click", () => {
+                let newindex = (counter - 1 + slides.length) % slides.length;
+                updateSlide(newindex);
+                restartAutoplay();
+            });
+
+            thumbnails = [
+                {id:1 , src:"images/1.jpg"},
+                {id:2 , src:"images/2.jpg"},
+                {id:3 , src:"images/3.jpg"},
+                {id:4 , src:"images/4.jpg"},
+            ]
+            thumbnails.forEach((img) => {
+                let thumb = document.createElement("img");
+                thumb.src = img.src;
+                thumb.className = "w-17 h-11 rounded-lg shadow-black shadow-lg cursor-pointer p-[1px] opacity-70 hover:opacity-100 transition-opacity";
+                thumb.onclick = () => {
+                    updateSlide(img.id - 1); // Select slide on click
+                    restartAutoplay();
+                };
+
+                thumbnailContainer.appendChild(thumb);
+            });
+
+            const startAutoplay = () => {
+                autoplayInterval = setInterval(() => {
+                    let newIndex = (counter + 1) % slides.length;
+                    updateSlide(newIndex);
+                }, 6000); // Change slide every 3 seconds
+            };
+
+            const restartAutoplay = () => {
+                clearInterval(autoplayInterval); // Stop current autoplay
+                startAutoplay(); // Start again
+            };
+
+            startAutoplay();
+
+
+        </script>
+    </body>
+</html>
